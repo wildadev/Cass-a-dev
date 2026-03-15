@@ -11,7 +11,7 @@ from cass.tools.registry import ToolRegistry
 logger = logging.getLogger(__name__)
 
 MAX_ITERATIONS = 10
-MODEL = "claude-sonnet-4-20250514"
+MODEL = "claude-sonnet-4-6"
 
 
 async def run_agent_loop(
@@ -39,7 +39,8 @@ async def run_agent_loop(
                 messages=messages,
             )
         except anthropic.APIError as e:
-            yield {"type": "error", "content": f"API error: {str(e)}"}
+            logger.error("Anthropic API error (status=%s): %s", getattr(e, 'status_code', '?'), e)
+            yield {"type": "error", "content": f"API error ({getattr(e, 'status_code', 'unknown')}): {str(e)}"}
             return
 
         assistant_content = response.content

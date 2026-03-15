@@ -27,7 +27,8 @@ COPY --from=frontend-build /frontend/dist /app/frontend/dist
 RUN mkdir -p /app/data
 
 ENV DATABASE_URL=sqlite+aiosqlite:///./data/cass.db
+ENV PORT=8000
 
 EXPOSE 8000
 
-CMD ["uvicorn", "cass.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD uvicorn cass.main:app --host 0.0.0.0 --port $PORT
